@@ -1,0 +1,3 @@
+# Netlify: bu klasörü site kökü (base directory) olarak bağla; build adımı yok.
+[build]
+  publish = "."

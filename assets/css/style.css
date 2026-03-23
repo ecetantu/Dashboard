@@ -1,0 +1,1466 @@
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      html,
+      body {
+        min-height: 100%;
+        height: 100%;
+        font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+        color: #fdf2f8;
+        overflow-x: hidden;
+      }
+
+      /* --- Zen: sadece saat + arka plan görünür --- */
+      body.zen-mode .zen-hide {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transition: opacity 0.55s ease;
+      }
+
+      /* Special case for timer in Zen Mode - preserve position */
+      body.zen-mode .smart-timer-panel.zen-hide {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        pointer-events: none !important;
+        transition: opacity 0.55s ease;
+        /* Don't reset position - keep left/top values */
+      }
+
+      body.zen-mode .zen-keep {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      /* Enhanced Zen Mode Timer Exception - Fixed Position --- */
+      body.zen-mode .zen-timer-visible {
+        /* Fixed positioning to prevent conflicts */
+        position: fixed !important;
+        transform: none !important;
+        z-index: 20 !important;
+        width: min(calc(100% - 2rem), 19rem) !important;
+        padding: 0.85rem 0.95rem !important;
+        transition: all 0.5s ease !important;
+        /* Enhanced visual effects for focus */
+        background: rgba(15, 5, 12, 0.95) !important;
+        backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(251, 113, 133, 0.4) !important;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 60px rgba(251, 113, 133, 0.15) !important;
+      }
+
+      body.zen-mode .zen-timer-visible.dragging {
+        transition: none !important;
+        cursor: move !important;
+        opacity: 0.8 !important;
+        z-index: 99999 !important;
+        box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4), 0 0 80px rgba(251, 113, 133, 0.25) !important;
+        transform: scale(1.02) !important;
+      }
+
+      body.zen-mode .zen-timer-visible.draggable {
+        cursor: grab !important;
+      }
+
+      /* Fix timer numbers positioning during Zen Mode dragging - Pixel Perfect */
+      body.zen-mode .zen-timer-visible .smart-progress-wrap {
+        margin: 0.5rem 0 !important;
+        transform: scale(1.05) !important;
+        transition: all 0.5s ease !important;
+        position: relative !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        flex-direction: column !important;
+        width: auto !important;
+        min-width: 280px !important;
+        text-align: center !important;
+        overflow: visible !important;
+      }
+
+      body.zen-mode .zen-timer-visible .smart-progress-shell {
+        width: 160px !important;
+        height: 160px !important;
+        filter: drop-shadow(0 0 15px rgba(251, 113, 133, 0.4)) !important;
+        transition: all 0.5s ease !important;
+        position: relative !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        overflow: visible !important;
+      }
+
+      body.zen-mode .zen-timer-visible .smart-progress-time {
+        position: absolute !important;
+        inset: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center !important;
+        pointer-events: none !important;
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        overflow: visible !important;
+        z-index: 1 !important;
+      }
+
+      body.zen-mode .zen-timer-visible .smart-progress-time strong {
+        font-size: 2.4rem !important;
+        font-weight: 200 !important;
+        color: #ffffff !important;
+        text-shadow: 0 2px 15px rgba(251, 113, 133, 0.5) !important;
+        letter-spacing: 0.05em !important;
+        transition: all 0.5s ease !important;
+        font-variant-numeric: tabular-nums !important;
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1 !important;
+        text-align: center !important;
+        width: auto !important;
+        overflow: visible !important;
+      }
+
+      body.zen-mode .zen-timer-visible .smart-progress-time span {
+        font-size: 0.8rem !important;
+        color: rgba(253, 242, 248, 0.9) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.15em !important;
+        font-weight: 500 !important;
+        transition: all 0.5s ease !important;
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        line-height: 1 !important;
+        text-align: center !important;
+        width: auto !important;
+        overflow: visible !important;
+      }
+
+      /* Zen Mode Drag Handle */
+      body.zen-mode .zen-timer-visible .zen-timer-drag-handle {
+        position: absolute !important;
+        top: 0.5rem !important;
+        left: 0.5rem !important;
+        width: 24px !important;
+        height: 24px !important;
+        z-index: 99998 !important;
+        cursor: grab !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        color: rgba(255, 255, 255, 0.3) !important;
+        font-size: 12px !important;
+        line-height: 1 !important;
+        letter-spacing: -2px !important;
+        transition: all 0.3s ease !important;
+        border-radius: 4px !important;
+        padding: 2px !important;
+        opacity: 0 !important;
+      }
+
+      body.zen-mode .zen-timer-visible .zen-timer-drag-handle:hover {
+        background: rgba(255, 255, 255, 0.1) !important;
+        color: rgba(255, 255, 255, 0.6) !important;
+        opacity: 1 !important;
+      }
+
+      body.zen-mode .zen-timer-visible.dragging .zen-timer-drag-handle {
+        cursor: grabbing !important;
+        opacity: 1 !important;
+        background: rgba(251, 113, 133, 0.2) !important;
+        color: rgba(255, 255, 255, 0.8) !important;
+      }
+
+      /* Hide unnecessary elements in Zen Mode - Visual Cleanup Only */
+      body.zen-mode .zen-timer-visible h3,
+      body.zen-mode .zen-timer-visible .smart-timer-label,
+      body.zen-mode .zen-timer-visible .smart-method-row,
+      body.zen-mode .zen-timer-visible .smart-action-row {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        transition: all 0.5s ease !important;
+        height: 0 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        overflow: hidden !important;
+      }
+
+      /* Enhanced Zen Mode Timer Hide Button - Pixel Perfect Clean */
+      body.zen-mode .zen-timer-visible .zen-timer-hide-wrapper {
+        position: absolute !important;
+        top: -5px !important;
+        right: -5px !important;
+        width: 40px !important;
+        height: 40px !important;
+        z-index: 1000 !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s ease !important;
+      }
+
+      body.zen-mode .zen-timer-visible .zen-timer-hide {
+        position: relative !important;
+        width: 32px !important;
+        height: 32px !important;
+        border-radius: 50% !important;
+        background: transparent !important;
+        border: none !important;
+        color: rgba(255, 255, 255, 0.3) !important;
+        font-size: 20px !important;
+        font-weight: 300 !important;
+        cursor: pointer !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s ease !important;
+        outline: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      body.zen-mode .zen-timer-visible .zen-timer-hide .zen-timer-icon {
+        line-height: 1 !important;
+        display: block !important;
+        transition: all 0.3s ease !important;
+      }
+
+      body.zen-mode .zen-timer-visible .zen-timer-hide-wrapper:hover .zen-timer-hide {
+        background: rgba(251, 113, 133, 0.2) !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        transform: scale(1.05) !important;
+      }
+
+      body.zen-mode .zen-timer-visible .zen-timer-hide:active,
+      body.zen-mode .zen-timer-visible .zen-timer-hide-wrapper:active .zen-timer-hide {
+        transform: scale(0.95) !important;
+        background: rgba(251, 113, 133, 0.3) !important;
+      }
+
+      body.zen-mode .zen-timer-visible .zen-timer-hide:focus-visible {
+        outline: 2px solid rgba(251, 113, 133, 0.6) !important;
+        outline-offset: 2px !important;
+      }
+
+      /* Subtle pulse effect for running timer in Zen Mode */
+      body.zen-mode .zen-timer-visible .smart-progress-shell::before {
+        content: '' !important;
+        position: absolute !important;
+        inset: -8px !important;
+        border-radius: 50% !important;
+        border: 1px solid rgba(251, 113, 133, 0.15) !important;
+        animation: zenTimerPulseFixed 3s ease-in-out infinite !important;
+        transition: all 0.5s ease !important;
+      }
+
+      @keyframes zenTimerPulseFixed {
+        0%, 100% {
+          transform: scale(1);
+          opacity: 0.3;
+        }
+        50% {
+          transform: scale(1.03);
+          opacity: 0.6;
+        }
+      }
+
+      .bg-gradient-base {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background: linear-gradient(
+          145deg,
+          #1a0a12 0%,
+          #3b1028 28%,
+          #4c1d3d 55%,
+          #2d1322 78%,
+          #1f0d18 100%
+        );
+        pointer-events: none;
+      }
+
+      .bg-photo {
+        position: fixed;
+        inset: 0;
+        z-index: 0;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0;
+        transition: opacity 1s ease;
+      }
+
+      .bg-photo.is-loaded {
+        opacity: 1;
+      }
+
+      .bg-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 1;
+        background: linear-gradient(
+          160deg,
+          rgba(59, 16, 40, 0.78) 0%,
+          rgba(45, 19, 34, 0.52) 45%,
+          rgba(30, 10, 24, 0.72) 100%
+        );
+        pointer-events: none;
+      }
+
+      .dashboard-shell {
+        position: relative;
+        z-index: 2;
+        opacity: 0;
+        transition: opacity 1.5s ease;
+      }
+
+      .dashboard-shell.is-revealed {
+        opacity: 1;
+      }
+
+      .glass {
+        background: rgba(255, 255, 255, 0.08);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 1.25rem;
+        box-shadow: 0 0.5rem 2.5rem rgba(0, 0, 0, 0.25),
+          inset 0 1px 0 rgba(255, 255, 255, 0.08);
+      }
+
+      .glass--tight {
+        padding: 1.25rem 1.5rem;
+      }
+
+      /* --- Sağ üst: Zen + Ses --- */
+      .top-tools {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 15;
+        display: flex;
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 0.5rem;
+      }
+
+      .icon-btn {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 0.65rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        color: #fff;
+        font-size: 1.15rem;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s ease, border-color 0.2s ease;
+      }
+
+      .icon-btn:hover {
+        background: rgba(255, 255, 255, 0.18);
+        border-color: rgba(251, 113, 133, 0.35);
+      }
+
+      .icon-btn[aria-pressed="true"] {
+        border-color: rgba(251, 113, 133, 0.55);
+        background: rgba(251, 113, 133, 0.22);
+      }
+
+      .audio-popover {
+        position: absolute;
+        top: calc(100% + 0.4rem);
+        right: 0;
+        width: 11rem;
+        padding: 0.75rem;
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(-6px);
+        transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+      }
+
+      .audio-popover.is-open {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+      }
+
+      .audio-popover h4 {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: rgba(251, 182, 206, 0.8);
+        margin-bottom: 0.5rem;
+      }
+
+      .audio-option {
+        width: 100%;
+        margin-bottom: 0.35rem;
+        padding: 0.45rem 0.5rem;
+        border-radius: 0.45rem;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        background: rgba(0, 0, 0, 0.2);
+        color: #fff;
+        font-size: 0.8rem;
+        font-family: inherit;
+        cursor: pointer;
+        text-align: left;
+      }
+
+      .audio-option:hover,
+      .audio-option.is-active {
+        border-color: rgba(251, 113, 133, 0.45);
+        background: rgba(251, 113, 133, 0.15);
+      }
+
+      .audio-option:last-of-type {
+        margin-bottom: 0;
+      }
+
+      .audio-wrap {
+        position: relative;
+      }
+
+      .mood-calendar-panel {
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 14;
+        width: min(calc(100% - 2rem), 19rem);
+        padding: 0.8rem 0.9rem;
+      }
+
+      .mood-calendar-head h3 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(251, 182, 206, 0.8);
+        margin-bottom: 0.5rem;
+      }
+
+      .mood-calendar-month-nav {
+        display: grid;
+        grid-template-columns: 1.9rem 1fr 1.9rem;
+        align-items: center;
+        gap: 0.35rem;
+        margin-bottom: 0.55rem;
+      }
+
+      #calendarMonthLabel {
+        font-size: 0.75rem;
+        text-align: center;
+        color: #fff;
+        font-weight: 600;
+      }
+
+      .calendar-nav-btn {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-radius: 0.45rem;
+        height: 1.9rem;
+        cursor: pointer;
+      }
+
+      .calendar-weekdays,
+      .calendar-grid {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 0.35rem;
+      }
+
+      .calendar-weekdays {
+        margin-bottom: 0.3rem;
+      }
+
+      .calendar-weekdays span {
+        font-size: 0.62rem;
+        text-align: center;
+        color: rgba(253, 242, 248, 0.65);
+      }
+
+      .calendar-day {
+        position: relative;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: rgba(0, 0, 0, 0.18);
+        color: #fff;
+        border-radius: 0.45rem;
+        min-height: 2rem;
+        font-size: 0.72rem;
+        cursor: pointer;
+      }
+
+      .calendar-day.is-muted {
+        opacity: 0.35;
+        pointer-events: none;
+      }
+
+      .calendar-day.is-today {
+        border-color: rgba(251, 113, 133, 0.6);
+      }
+
+      .calendar-day-dot {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 0.2rem;
+        width: 0.33rem;
+        height: 0.33rem;
+        border-radius: 999px;
+      }
+
+      .smart-timer-panel {
+        position: fixed;
+        top: 1rem;
+        right: 1rem;
+        z-index: 14;
+        width: min(calc(100% - 2rem), 19rem);
+        padding: 0.85rem 0.95rem;
+        transition: all 0.3s ease;  /* Smooth transition for reset */
+      }
+
+      .smart-timer-panel h3 {
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(251, 182, 206, 0.8);
+        margin-bottom: 0.5rem;
+      }
+
+      .smart-timer-label {
+        display: block;
+        font-size: 0.7rem;
+        margin-bottom: 0.3rem;
+        color: rgba(253, 242, 248, 0.75);
+      }
+
+      .smart-timer-input {
+        width: 100%;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.22);
+        color: #fff;
+        border-radius: 0.5rem;
+        padding: 0.45rem 0.55rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .smart-method-row,
+      .smart-action-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+
+      .smart-method-btn,
+      .smart-action-btn {
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.08);
+        color: #fff;
+        border-radius: 0.45rem;
+        padding: 0.35rem 0.48rem;
+        font-size: 0.68rem;
+        cursor: pointer;
+      }
+
+      .smart-method-btn.is-active {
+        border-color: rgba(251, 113, 133, 0.55);
+        background: rgba(251, 113, 133, 0.2);
+      }
+
+      .smart-action-btn.primary {
+        background: rgba(251, 113, 133, 0.3);
+      }
+
+      .smart-progress-wrap {
+        display: flex;
+        justify-content: center;
+        margin: 0.6rem 0;
+      }
+
+      .smart-progress-shell {
+        width: 11.9rem;
+        height: 11.9rem;
+        position: relative;
+      }
+
+      .smart-progress-time {
+        position: absolute;
+        inset: 0;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        text-align: center;
+        pointer-events: none;
+        transform: translateZ(0);
+      }
+
+      .smart-progress-time strong {
+        font-size: 1.7rem;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.04em;
+        transform: translateZ(0);
+      }
+
+      .smart-progress-time span {
+        display: block;
+        font-size: 0.68rem;
+        color: rgba(253, 242, 248, 0.75);
+        transform: translateZ(0);
+      }
+
+      .mood-modal-overlay {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        display: none;
+        justify-content: center;
+        align-items: center;
+        background: rgba(10, 5, 12, 0.58);
+        backdrop-filter: blur(4px);
+        padding: 1rem;
+      }
+
+      .mood-modal-overlay.is-open {
+        display: flex;
+      }
+
+      .mood-modal {
+        width: min(100%, 24rem);
+        padding: 1rem;
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 20px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .mood-modal h3 {
+        margin-bottom: 0.4rem;
+        color: white;
+        font-weight: 300;
+        text-align: center;
+      }
+
+      .mood-modal-date {
+        margin-bottom: 0.45rem;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.78rem;
+        text-align: center;
+      }
+
+      .mood-options {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        justify-content: space-between !important;
+        gap: 10px !important;
+        padding: 20px !important;
+      }
+
+      .mood-option {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+        flex: 1 1 100px !important;
+        max-width: 120px !important;
+        height: 120px !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: transparent !important;
+        cursor: pointer !important;
+        transition: all 0.3s ease !important;
+        color: white !important;
+        opacity: 0.7 !important;
+        position: relative !important;
+        overflow: hidden !important;
+      }
+
+      .mood-option-emoji {
+        font-size: 24px !important;
+        line-height: 1 !important;
+        margin-bottom: 8px !important;
+        filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.2)) !important;
+        transition: all 0.3s ease !important;
+      }
+
+      .mood-option-label {
+        font-size: 12px !important;
+        font-weight: 300 !important;
+        line-height: 1.2 !important;
+        text-align: center !important;
+        letter-spacing: 0.01em !important;
+        transition: all 0.3s ease !important;
+      }
+
+      .mood-option:hover {
+        opacity: 1 !important;
+        transform: translateY(-2px) !important;
+      }
+
+      .mood-option.is-selected {
+        opacity: 1 !important;
+      }
+
+      /* Inside Out Color Palette */
+      .mood-option[data-mood="🚀"]:hover {
+        background: rgba(255, 215, 0, 0.2) !important;
+        border-color: #ffd700 !important;
+        box-shadow: 0 0 15px rgba(255, 215, 0, 0.4) !important;
+      }
+
+      .mood-option[data-mood="🚀"]:hover .mood-option-emoji {
+        filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.6)) !important;
+      }
+
+      .mood-option[data-mood="🧠"]:hover {
+        background: rgba(168, 85, 247, 0.2) !important;
+        border-color: #a855f7 !important;
+        box-shadow: 0 0 15px rgba(168, 85, 247, 0.4) !important;
+      }
+
+      .mood-option[data-mood="🧠"]:hover .mood-option-emoji {
+        filter: drop-shadow(0 0 12px rgba(168, 85, 247, 0.6)) !important;
+      }
+
+      .mood-option[data-mood="🔋"]:hover {
+        background: rgba(0, 191, 255, 0.2) !important;
+        border-color: #00bfff !important;
+        box-shadow: 0 0 15px rgba(0, 191, 255, 0.4) !important;
+      }
+
+      .mood-option[data-mood="🔋"]:hover .mood-option-emoji {
+        filter: drop-shadow(0 0 12px rgba(0, 191, 255, 0.6)) !important;
+      }
+
+      .mood-option[data-mood="🛠️"]:hover {
+        background: rgba(239, 68, 68, 0.2) !important;
+        border-color: #ef4444 !important;
+        box-shadow: 0 0 15px rgba(239, 68, 68, 0.4) !important;
+      }
+
+      .mood-option[data-mood="🛠️"]:hover .mood-option-emoji {
+        filter: drop-shadow(0 0 12px rgba(239, 68, 68, 0.6)) !important;
+      }
+
+      .mood-option[data-mood="📝"]:hover {
+        background: rgba(74, 222, 128, 0.2) !important;
+        border-color: #4ade80 !important;
+        box-shadow: 0 0 15px rgba(74, 222, 128, 0.4) !important;
+      }
+
+      .mood-option[data-mood="📝"]:hover .mood-option-emoji {
+        filter: drop-shadow(0 0 12px rgba(74, 222, 128, 0.6)) !important;
+      }
+
+      .mood-option.is-selected {
+        opacity: 1 !important;
+      }
+
+      .mood-option.is-selected[data-mood="🚀"] {
+        background: rgba(255, 215, 0, 0.15) !important;
+        border-color: #ffd700 !important;
+      }
+
+      .mood-option.is-selected[data-mood="🚀"] .mood-option-emoji {
+        filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.5)) !important;
+      }
+
+      .mood-option.is-selected[data-mood="🧠"] {
+        background: rgba(168, 85, 247, 0.15) !important;
+        border-color: #a855f7 !important;
+      }
+
+      .mood-option.is-selected[data-mood="🧠"] .mood-option-emoji {
+        filter: drop-shadow(0 0 8px rgba(168, 85, 247, 0.5)) !important;
+      }
+
+      .mood-option.is-selected[data-mood="🔋"] {
+        background: rgba(0, 191, 255, 0.15) !important;
+        border-color: #00bfff !important;
+      }
+
+      .mood-option.is-selected[data-mood="🔋"] .mood-option-emoji {
+        filter: drop-shadow(0 0 8px rgba(0, 191, 255, 0.5)) !important;
+      }
+
+      .mood-option.is-selected[data-mood="🛠️"] {
+        background: rgba(239, 68, 68, 0.15) !important;
+        border-color: #ef4444 !important;
+      }
+
+      .mood-option.is-selected[data-mood="🛠️"] .mood-option-emoji {
+        filter: drop-shadow(0 0 8px rgba(239, 68, 68, 0.5)) !important;
+      }
+
+      .mood-option.is-selected[data-mood="📝"] {
+        background: rgba(74, 222, 128, 0.15) !important;
+        border-color: #4ade80 !important;
+      }
+
+      .mood-option.is-selected[data-mood="📝"] .mood-option-emoji {
+        filter: drop-shadow(0 0 8px rgba(74, 222, 128, 0.5)) !important;
+      }
+
+      .mood-note-input {
+        width: 100%;
+        min-height: 5.7rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        border-radius: 0.5rem;
+        background: rgba(0, 0, 0, 0.2);
+        color: #fff;
+        padding: 0.5rem;
+        resize: vertical;
+        font-family: inherit;
+      }
+
+      .mood-modal-actions {
+        margin-top: 0.5rem;
+        display: flex;
+        justify-content: flex-end;
+        gap: 0.35rem;
+      }
+
+      .smart-timer-toast {
+        position: fixed;
+        right: 1rem;
+        bottom: 1rem;
+        z-index: 42;
+        display: none;
+        padding: 0.65rem 0.75rem;
+        font-size: 0.78rem;
+      }
+
+      .smart-timer-toast.is-visible {
+        display: block;
+      }
+
+      /* --- Sol üst: Pomodoro --- */
+      .pomodoro-panel {
+        position: fixed;
+        top: 1rem;
+        left: 1rem;
+        z-index: 14;
+        width: min(calc(100% - 2rem), 15.5rem);
+        padding: 0.75rem 0.9rem;
+      }
+
+      .pomodoro-panel h3 {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: rgba(251, 182, 206, 0.75);
+        margin-bottom: 0.35rem;
+      }
+
+      .pomodoro-time {
+        font-size: 1.65rem;
+        font-weight: 300;
+        font-variant-numeric: tabular-nums;
+        letter-spacing: 0.06em;
+        margin-bottom: 0.55rem;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.35);
+      }
+
+      .pomodoro-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.35rem;
+      }
+
+      .pomodoro-actions button {
+        flex: 1;
+        min-width: 3.5rem;
+        padding: 0.4rem 0.35rem;
+        border-radius: 0.45rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.2);
+        color: #fff;
+        font-size: 0.7rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      .pomodoro-actions button:hover {
+        background: rgba(251, 113, 133, 0.2);
+      }
+
+      .pomodoro-actions button.primary {
+        background: rgba(251, 113, 133, 0.28);
+      }
+
+      /* Pomodoro bitti bildirimi */
+      .pomodoro-toast-backdrop {
+        position: fixed;
+        inset: 0;
+        z-index: 40;
+        background: rgba(10, 5, 12, 0.55);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.35s ease;
+      }
+
+      .pomodoro-toast-backdrop.is-visible {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .pomodoro-toast {
+        max-width: 20rem;
+        width: 100%;
+        padding: 1.5rem 1.35rem;
+        text-align: center;
+      }
+
+      .pomodoro-toast h2 {
+        font-size: 1.15rem;
+        margin-bottom: 0.4rem;
+        color: #fff;
+      }
+
+      .pomodoro-toast p {
+        font-size: 0.85rem;
+        color: rgba(253, 242, 248, 0.75);
+        margin-bottom: 1rem;
+      }
+
+      .pomodoro-toast button {
+        padding: 0.55rem 1.25rem;
+        border-radius: 0.55rem;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: linear-gradient(
+          135deg,
+          rgba(251, 113, 133, 0.45),
+          rgba(190, 24, 93, 0.45)
+        );
+        color: #fff;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      .app {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 5.25rem 1rem 13rem;
+      }
+
+      .center-stack {
+        width: 100%;
+        max-width: 32rem;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1.25rem;
+      }
+
+      .greeting {
+        font-size: clamp(1rem, 3.5vw, 1.35rem);
+        font-weight: 500;
+        letter-spacing: 0.02em;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, 0.4);
+      }
+
+      .clock {
+        font-size: clamp(3rem, 12vw, 5.5rem);
+        font-weight: 200;
+        line-height: 1;
+        letter-spacing: 0.04em;
+        color: #ffffff;
+        text-shadow: 0 4px 24px rgba(0, 0, 0, 0.45);
+        font-variant-numeric: tabular-nums;
+      }
+
+      .date-line {
+        font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+        font-weight: 400;
+        color: rgba(253, 242, 248, 0.92);
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+        margin-top: 0.35rem;
+      }
+
+      .focus-card h2 {
+        font-size: 0.95rem;
+        font-weight: 600;
+        margin-bottom: 0.65rem;
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+      .focus-card {
+        width: 100%;
+        margin-top: 0.5rem;
+      }
+
+      .focus-card textarea {
+        width: 100%;
+        min-height: 4rem;
+        padding: 0.65rem 0.85rem;
+        border-radius: 0.65rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.22);
+        color: #fff;
+        font-size: 0.95rem;
+        font-family: inherit;
+        resize: vertical;
+      }
+
+      .focus-card textarea:focus {
+        outline: none;
+        border-color: rgba(251, 113, 133, 0.45);
+      }
+
+      .focus-hint {
+        font-size: 0.75rem;
+        color: rgba(253, 242, 248, 0.55);
+        margin-top: 0.5rem;
+        text-align: left;
+      }
+
+      .focus-hint--small {
+        font-size: 0.65rem;
+        margin-top: 0.35rem;
+        color: rgba(251, 182, 206, 0.65);
+        line-height: 1.35;
+      }
+
+      .footer-quote {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 3;
+        padding: 0.75rem 1rem 1rem;
+        text-align: center;
+        font-size: clamp(0.8rem, 2vw, 0.95rem);
+        line-height: 1.45;
+        color: rgba(253, 242, 248, 0.88);
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+        background: linear-gradient(
+          to top,
+          rgba(30, 10, 24, 0.9) 0%,
+          transparent 100%
+        );
+        pointer-events: none;
+        transition: opacity 0.55s ease;
+      }
+
+      .footer-quote span.label {
+        display: block;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+        color: rgba(251, 182, 206, 0.65);
+        margin-bottom: 0.25rem;
+      }
+
+      /* --- Sol alt: Aklımdakiler --- */
+      .notes-panel {
+        position: fixed;
+        left: 1rem;
+        bottom: 4.25rem;
+        z-index: 12;
+        width: min(calc(100% - 2rem), 19rem);
+        max-height: min(42vh, 16rem);
+        display: flex;
+        flex-direction: column;
+        padding: 0.75rem 0.85rem;
+      }
+
+      .notes-panel h3 {
+        font-size: 0.8rem;
+        font-weight: 600;
+        margin-bottom: 0.45rem;
+        color: rgba(255, 255, 255, 0.92);
+      }
+
+      .notes-panel textarea {
+        flex: 1;
+        min-height: 5.5rem;
+        max-height: 11rem;
+        width: 100%;
+        padding: 0.5rem 0.55rem;
+        border-radius: 0.55rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.22);
+        color: #fff;
+        font-size: 0.78rem;
+        font-family: inherit;
+        line-height: 1.4;
+        resize: vertical;
+      }
+
+      .notes-panel textarea:focus {
+        outline: none;
+        border-color: rgba(251, 113, 133, 0.4);
+      }
+
+      .notes-panel .notes-hint {
+        font-size: 0.6rem;
+        color: rgba(251, 182, 206, 0.55);
+        margin-top: 0.35rem;
+      }
+
+      /* --- Sağ alt: To-Do + ilerleme --- */
+      .todo-panel {
+        position: fixed;
+        right: 1rem;
+        left: auto;
+        bottom: 4.25rem;
+        z-index: 12;
+        width: min(calc(100% - 2rem), 20rem);
+        max-height: min(50vh, 24rem);
+        display: flex;
+        flex-direction: column;
+        transition: max-height 0.35s ease;
+      }
+
+      .todo-panel.collapsed {
+        max-height: 2.85rem;
+        overflow: hidden;
+      }
+
+      .todo-panel.collapsed .todo-body {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .todo-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.5rem;
+        padding: 0.65rem 0.85rem;
+        cursor: pointer;
+        user-select: none;
+        flex-shrink: 0;
+      }
+
+      .todo-header h3 {
+        font-size: 0.85rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 0.4rem;
+      }
+
+      .todo-toggle {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        color: #fff;
+        width: 1.75rem;
+        height: 1.75rem;
+        border-radius: 0.4rem;
+        cursor: pointer;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .todo-body {
+        padding: 0 0.85rem 0.85rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.55rem;
+        overflow: hidden;
+        flex: 1;
+        min-height: 0;
+        transition: opacity 0.25s ease;
+      }
+
+      .todo-progress-wrap {
+        flex-shrink: 0;
+      }
+
+      .todo-progress-label {
+        font-size: 0.65rem;
+        color: rgba(251, 182, 206, 0.75);
+        margin-bottom: 0.3rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .todo-progress-track {
+        height: 4px;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.35);
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .todo-progress-fill {
+        height: 100%;
+        width: 0%;
+        border-radius: 999px;
+        background: linear-gradient(
+          90deg,
+          rgba(251, 113, 133, 0.5),
+          rgba(244, 114, 182, 0.95)
+        );
+        transition: width 0.45s cubic-bezier(0.33, 1, 0.68, 1);
+        box-shadow: 0 0 12px rgba(251, 113, 133, 0.35);
+      }
+
+      .todo-add {
+        display: flex;
+        gap: 0.4rem;
+      }
+
+      .todo-add input {
+        flex: 1;
+        padding: 0.45rem 0.55rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.22);
+        color: #fff;
+        font-size: 0.8rem;
+      }
+
+      .todo-add input:focus {
+        outline: none;
+        border-color: rgba(251, 113, 133, 0.4);
+      }
+
+      .todo-add button {
+        padding: 0.45rem 0.65rem;
+        border-radius: 0.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(251, 113, 133, 0.22);
+        color: #fff;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .todo-list {
+        list-style: none;
+        overflow-y: auto;
+        max-height: 10rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.35rem;
+      }
+
+      .todo-item {
+        display: flex;
+        align-items: flex-start;
+        gap: 0.45rem;
+        padding: 0.4rem 0.35rem;
+        border-radius: 0.45rem;
+        background: rgba(0, 0, 0, 0.15);
+        font-size: 0.8rem;
+        line-height: 1.35;
+        overflow: hidden;
+      }
+
+      @keyframes todoSlideDown {
+        from {
+          opacity: 0;
+          transform: translateY(-14px);
+          max-height: 0;
+          padding-top: 0;
+          padding-bottom: 0;
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+          max-height: 6rem;
+          padding-top: 0.4rem;
+          padding-bottom: 0.4rem;
+        }
+      }
+
+      .todo-item.todo-enter {
+        animation: todoSlideDown 0.45s ease forwards;
+      }
+
+      @keyframes todoFadeOut {
+        to {
+          opacity: 0;
+          transform: translateX(6px) scale(0.98);
+        }
+      }
+
+      .todo-item.todo-leave {
+        animation: todoFadeOut 0.35s ease forwards;
+        pointer-events: none;
+      }
+
+      .todo-item input[type="checkbox"] {
+        margin-top: 0.15rem;
+        flex-shrink: 0;
+        cursor: pointer;
+      }
+
+      .todo-item .todo-text {
+        flex: 1;
+        word-break: break-word;
+      }
+
+      .todo-item.done .todo-text {
+        text-decoration: line-through;
+        opacity: 0.65;
+      }
+
+      .todo-item .todo-delete {
+        flex-shrink: 0;
+        background: transparent;
+        border: none;
+        color: rgba(253, 242, 248, 0.65);
+        cursor: pointer;
+        padding: 0.1rem;
+        font-size: 1rem;
+      }
+
+      .todo-empty {
+        font-size: 0.75rem;
+        color: rgba(253, 242, 248, 0.45);
+        text-align: center;
+        padding: 0.5rem;
+      }
+
+      .welcome-screen {
+        position: fixed;
+        inset: 0;
+        z-index: 20;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1.25rem;
+        background: rgba(15, 5, 12, 0.45);
+        backdrop-filter: blur(6px);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 1.5s ease;
+      }
+
+      .welcome-screen.is-active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .welcome-screen.is-hidden {
+        display: none;
+      }
+
+      .welcome-card {
+        width: 100%;
+        max-width: 22rem;
+        padding: 2rem 1.75rem;
+        text-align: center;
+      }
+
+      .welcome-card h1 {
+        font-size: clamp(1.15rem, 4vw, 1.45rem);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        color: #fff;
+      }
+
+      .welcome-card p {
+        font-size: 0.9rem;
+        color: rgba(253, 242, 248, 0.75);
+        margin-bottom: 1.25rem;
+      }
+
+      .welcome-card input {
+        width: 100%;
+        padding: 0.75rem 1rem;
+        border-radius: 0.65rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(0, 0, 0, 0.25);
+        color: #fff;
+        font-size: 1rem;
+        font-family: inherit;
+        margin-bottom: 1rem;
+      }
+
+      .welcome-card button {
+        width: 100%;
+        padding: 0.7rem 1rem;
+        border-radius: 0.65rem;
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        background: linear-gradient(
+          135deg,
+          rgba(251, 113, 133, 0.45),
+          rgba(190, 24, 93, 0.5)
+        );
+        color: #fff;
+        font-size: 0.95rem;
+        font-weight: 600;
+        font-family: inherit;
+        cursor: pointer;
+      }
+
+      .welcome-error {
+        font-size: 0.8rem;
+        color: #fda4af;
+        margin-bottom: 0.75rem;
+        min-height: 1.1rem;
+      }
+
+      @media (max-width: 640px) {
+        .mood-calendar-panel,
+        .smart-timer-panel {
+          position: static;
+          width: calc(100% - 2rem);
+          max-width: none;
+          margin: 0 auto 0.7rem;
+        }
+
+        .notes-panel,
+        .todo-panel {
+          bottom: 5rem;
+        }
+
+        .notes-panel {
+          width: calc(100% - 2rem);
+          max-width: none;
+        }
+
+        .todo-panel {
+          width: calc(100% - 2rem);
+          max-width: none;
+        }
+
+        .app {
+          padding-top: 8.5rem;
+        }
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }

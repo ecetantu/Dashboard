@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Odaklanma Panosu — Focus Dashboard</title>
+    <meta
+      name="description"
+      content="Doğa temalı verimlilik ve odak panosu."
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <link rel="preconnect" href="https://images.unsplash.com" crossorigin />
+    <link rel="preconnect" href="https://assets.mixkit.co" crossorigin />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <div class="bg-gradient-base zen-keep" aria-hidden="true"></div>
+    <div id="bgPhoto" class="bg-photo zen-keep" aria-hidden="true"></div>
+    <div class="bg-overlay zen-keep" aria-hidden="true"></div>
+
+    <div
+      id="welcomeScreen"
+      class="welcome-screen"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="welcomeTitle"
+      aria-hidden="true"
+    >
+      <div class="welcome-card glass">
+        <h1 id="welcomeTitle">Hoş geldin</h1>
+        <p>Panoya devam etmek için adını veya takma adını yaz.</p>
+        <label for="welcomeNameInput" class="visually-hidden">Adın</label>
+        <input
+          type="text"
+          id="welcomeNameInput"
+          placeholder="Örn. Ayşe"
+          maxlength="40"
+          autocomplete="given-name"
+        />
+        <p id="welcomeError" class="welcome-error" role="alert"></p>
+        <button type="button" id="welcomeContinueBtn">Başlayalım</button>
+      </div>
+    </div>
+
+    <div class="top-tools">
+      <button
+        type="button"
+        id="zenToggleBtn"
+        class="icon-btn"
+        aria-pressed="false"
+        title="Zen modu"
+        aria-label="Zen modu: diğer panelleri gizle"
+      >
+        👁
+      </button>
+      <div class="audio-wrap">
+        <button
+          type="button"
+          id="audioToggleBtn"
+          class="icon-btn"
+          aria-expanded="false"
+          title="Odak sesleri"
+          aria-label="Odak sesleri menüsünü aç"
+        >
+          ♪
+        </button>
+        <div id="audioPopover" class="audio-popover glass" role="menu">
+          <h4>Odak sesleri</h4>
+          <button type="button" class="audio-option" data-ambient="rain">
+            Yağmur
+          </button>
+          <button type="button" class="audio-option" data-ambient="forest">
+            Orman
+          </button>
+          <button type="button" class="audio-option" data-ambient="off">
+            Kapat
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="dashboardShell" class="dashboard-shell">
+      <aside
+        id="moodCalendarPanel"
+        class="mood-calendar-panel glass zen-hide"
+        aria-label="Günlük ve takvim"
+      >
+        <div class="mood-calendar-head">
+          <h3>Günlük ve Takvim</h3>
+          <div class="mood-calendar-month-nav">
+            <button type="button" class="calendar-nav-btn" id="calendarPrevBtn" aria-label="Önceki ay">◀</button>
+            <strong id="calendarMonthLabel"></strong>
+            <button type="button" class="calendar-nav-btn" id="calendarNextBtn" aria-label="Sonraki ay">▶</button>
+          </div>
+        </div>
+        <div class="calendar-weekdays" id="calendarWeekdays"></div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+      </aside>
+
+      <aside
+        id="smartTimerPanel"
+        class="smart-timer-panel glass zen-hide"
+        aria-label="Akıllı zamanlayıcı"
+      >
+        <div class="zen-timer-drag-handle" id="zenTimerDragHandle" title="Sürüklemek için tutun">⋮⋮</div>
+        <h3>Akıllı Zamanlayıcı</h3>
+        <label for="timerMinutesInput" class="smart-timer-label">Süre (dakika)</label>
+        <input type="number" id="timerMinutesInput" class="smart-timer-input" min="1" max="240" value="25" />
+        <div class="smart-method-row">
+          <button type="button" class="smart-method-btn is-active" data-minutes="25">Pomodoro (25dk)</button>
+          <button type="button" class="smart-method-btn" data-minutes="50">Flowtime (50dk)</button>
+          <button type="button" class="smart-method-btn" data-minutes="90">Deep Work (90dk)</button>
+        </div>
+        <div class="smart-progress-wrap">
+          <div class="smart-progress-shell">
+            <svg width="190" height="190" viewBox="0 0 190 190" aria-hidden="true">
+              <defs>
+                <linearGradient id="smartProgressGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#fb7185"></stop>
+                  <stop offset="100%" stop-color="#f472b6"></stop>
+                </linearGradient>
+              </defs>
+              <circle cx="95" cy="95" r="76" fill="none" stroke="rgba(255,255,255,0.15)" stroke-width="10"></circle>
+              <circle
+                id="smartTimerProgressCircle"
+                cx="95"
+                cy="95"
+                r="76"
+                fill="none"
+                stroke="url(#smartProgressGradient)"
+                stroke-width="10"
+                stroke-linecap="round"
+                transform="rotate(-90 95 95)"
+              ></circle>
+            </svg>
+            <div class="smart-progress-time">
+              <strong id="smartTimerDisplay">25:00</strong>
+              <span id="smartTimerStatus">Hazır</span>
+            </div>
+          </div>
+        </div>
+        <div class="smart-action-row">
+          <button type="button" class="smart-action-btn primary" id="smartTimerStart">Başlat</button>
+          <button type="button" class="smart-action-btn" id="smartTimerPause">Duraklat</button>
+          <button type="button" class="smart-action-btn" id="smartTimerReset">Sıfırla</button>
+        </div>
+      </aside>
+
+      <main class="app">
+        <div class="center-stack">
+          <div class="greeting glass glass--tight zen-hide">
+            <p id="greetingLine">Merhaba</p>
+          </div>
+
+          <div class="zen-keep" id="zenClockBlock">
+            <div id="clock" class="clock" aria-live="polite">00:00:00</div>
+            <p id="dateLine" class="date-line"></p>
+          </div>
+
+          <section
+            class="focus-card glass glass--tight zen-hide"
+            aria-labelledby="focusHeading"
+          >
+            <h2 id="focusHeading">Bugünkü ana hedefin nedir?</h2>
+            <textarea
+              id="mainFocus"
+              rows="3"
+              placeholder="Kısa ve net yaz… Otomatik kaydedilir."
+            ></textarea>
+            <p class="focus-hint">
+              İnternet bağlantısı varken yazdığın metin bu cihazda saklanır.
+            </p>
+            <p class="focus-hint focus-hint--small">
+              Ana hedef, kaydettiğin andan itibaren 24 saat sonra otomatik
+              silinir; yeni bir hedef yazarak süreyi yenilersin.
+            </p>
+          </section>
+        </div>
+      </main>
+
+      <aside class="notes-panel glass zen-hide" aria-label="Hızlı notlar">
+        <h3>Aklımdakiler</h3>
+        <label for="quickNotes" class="visually-hidden">Hızlı notlar</label>
+        <textarea
+          id="quickNotes"
+          placeholder="Düşüncelerini buraya dök… Otomatik kaydedilir."
+        ></textarea>
+        <p class="notes-hint">Bu alan tarayıcında saklanır (LocalStorage).</p>
+      </aside>
+
+      <aside
+        id="todoPanel"
+        class="todo-panel glass collapsed zen-hide"
+        aria-label="Yapılacaklar listesi"
+      >
+        <div
+          class="todo-header"
+          id="todoHeader"
+          role="button"
+          tabindex="0"
+          aria-expanded="false"
+        >
+          <h3><span aria-hidden="true">✓</span> Yapılacaklar</h3>
+          <button
+            type="button"
+            class="todo-toggle"
+            id="todoToggle"
+            aria-label="Listeyi aç veya kapat"
+          >
+            ▼
+          </button>
+        </div>
+        <div class="todo-body">
+          <div class="todo-progress-wrap">
+            <div class="todo-progress-label">
+              <span>İlerleme</span>
+              <span id="todoProgressFraction">0 / 0</span>
+            </div>
+            <div class="todo-progress-track">
+              <div class="todo-progress-fill" id="todoProgressFill"></div>
+            </div>
+          </div>
+          <div class="todo-add">
+            <input
+              type="text"
+              id="newTodo"
+              placeholder="Yeni görev…"
+              maxlength="120"
+              aria-label="Yeni görev metni"
+            />
+            <button type="button" id="addTodoBtn">Ekle</button>
+          </div>
+          <ul class="todo-list" id="todoList" aria-live="polite"></ul>
+        </div>
+      </aside>
+
+      <footer class="footer-quote zen-hide" role="contentinfo">
+        <span class="label" id="footerLabel"></span>
+        <p id="footerText"></p>
+      </footer>
+    </div>
+
+    <div id="moodModalOverlay" class="mood-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="moodModalTitle">
+      <div class="mood-modal glass">
+        <h3 id="moodModalTitle">Gün Kaydı</h3>
+        <p id="moodModalDate" class="mood-modal-date"></p>
+        <div id="moodOptions" class="mood-options"></div>
+        <label for="moodNoteInput" class="smart-timer-label">Günün Notu</label>
+        <textarea id="moodNoteInput" class="mood-note-input" placeholder="Bugün nasıldı?"></textarea>
+        <div class="mood-modal-actions">
+          <button type="button" class="smart-action-btn" id="moodDeleteBtn">Temizle</button>
+          <button type="button" class="smart-action-btn" id="moodCancelBtn">İptal</button>
+          <button type="button" class="smart-action-btn primary" id="moodSaveBtn">Kaydet</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="smartTimerToast" class="smart-timer-toast glass" role="status" aria-live="polite"></div>
+
+    <script src="assets/js/script.js" defer></script>
+  </body>
+</html>
