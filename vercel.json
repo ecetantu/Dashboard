@@ -1,5 +1,4 @@
 {
-  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
   "cleanUrls": true,
   "trailingSlash": false,
@@ -12,15 +11,12 @@
           "value": "public, max-age=31536000, immutable"
         }
       ]
-    },
+    }
+  ],
+  "rewrites": [
     {
-      "source": "/(.*\\.(css|js|png|jpg|jpeg|gif|ico|svg))",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
+      "source": "/(.*)",
+      "destination": "/index.html"
     }
   ]
 }
